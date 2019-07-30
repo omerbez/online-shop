@@ -53,7 +53,8 @@ class Directory extends React.Component
                                     key={item.id}
                                     title={item.title}
                                     imageURL={item.imageUrl}
-                                    size={item.size}/>
+                                    size={item.size}
+                                    linkUrl={item.linkUrl}/>
                      })};
                 </div>
     }
