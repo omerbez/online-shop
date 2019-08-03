@@ -1,21 +1,50 @@
 import React from 'react';
-import {Switch, Route} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Homepage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
+import SignInAndUp from "./pages/sign-in-up/sign-in-up.component";
 import "./App.css";
+import { auth } from './firebase/firebase.utils';
 
-function App() {
+class App extends React.Component
+{
+   
+    constructor() {
+        super();
+        this.state = {
+            currentUser: null
+        }
+        
+        //method which we get from the auth.onAuthStateChanged() function
+        //So we can unsbscribe when component destroyed..
+        this.unsbscribeMethod = null;
+    }
 
-    return (
-        <div>
-            <Header/>
-            <Switch>
-                <Route exact path="/" component={Homepage}/>
-                <Route path="/shop" component={ShopPage}/>
-            </Switch>
-        </div>
-    );
+    componentDidMount() {
+        //will be called when sign-in & sign-out
+        this.unsbscribeMethod = auth.onAuthStateChanged((user) => {
+            this.setState({currentUser: user});
+            console.log(user);
+        });
+    }
+
+    componentWillUnmount() {
+        this.unsbscribeMethod();
+    }
+
+    render() {
+        return (
+            <div>
+                <Header currentUser={this.state.currentUser}/>
+                <Switch>
+                    <Route exact path="/" component={Homepage}/>
+                    <Route path="/shop" component={ShopPage}/>
+                    <Route path="/signin" component={SignInAndUp}/>
+                </Switch>
+            </div>
+        );
+    }
 }
 
 export default App;
