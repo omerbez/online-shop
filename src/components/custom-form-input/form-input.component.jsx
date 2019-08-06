@@ -17,7 +17,7 @@ const handleLabel = (label, inputValue) => {
 //destruction + spread..
 const CustomFormInput = ({label, value, ...otherProps}) => (
     <div className="group">
-        <input className="form-input" {...otherProps}/>
+        <input className="form-input" value={value} {...otherProps}/>
         {handleLabel(label, value)}
     </div>
 )

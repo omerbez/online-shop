@@ -26,3 +26,36 @@ provider.setCustomParameters({prompt: "select_account"});
 export const SignInWithGoogle = () => auth.signInWithPopup(provider); 
 
 export default firebase;
+
+export const createUserIfNotExists = async(userAuth, otherData) => {
+    //if it's a sign-out..
+    if(!userAuth) 
+        return;
+
+    //get DocumentReference object - for CRUD operations!
+    //the document ID is the user.uid.. that what we are looking for..
+    const userDocRef = firestore.doc(`users/${userAuth.uid}`);
+    //get the doc snapshot, the get() method is a Promise so we have to await for result..
+    //The snapshot object is for data!
+    const snapshot = await userDocRef.get();
+    
+    //check if the document isn't exists, actually the document is unique 
+    //and if it exists nothing will happen, but still it's better to check for perfomance
+    if(!snapshot.exists) {
+        //coping the displayName & email properties from the userAuth object
+        const {displayName, email} = userAuth;
+        const createDate = new Date();
+        try {
+            //performing create operation to store the user data
+            await userDocRef.set({
+                displayName,
+                email,
+                createDate,
+                ...otherData
+            });
+        } catch(ex) {
+            console.log("error creating user: "+ex.message);
+        }     
+    }
+    return userDocRef;
+}
