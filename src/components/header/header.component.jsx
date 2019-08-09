@@ -3,11 +3,12 @@ import {Link} from 'react-router-dom';
 import {ReactComponent as Logo} from '../../assets/crown.svg';
 import './header.styles.scss';
 import { auth } from '../../firebase/firebase.utils';
+import { connect } from 'react-redux';
 
 
-const showSignOption = (currentUser) => {
+const showSignOption = (theUser) => {
     //if not null and not undefined..
-    if(currentUser) {
+    if(theUser) {
         return(
             <div className="option" onClick={()=>auth.signOut()}>
                 SIGN OUT
@@ -37,9 +38,20 @@ const Header = (props) => (
                 CONTACT
             </Link>
 
-            {showSignOption(props.currentUser)}
+            {showSignOption(props.theUser)}
         </div>
     </div>
 );
 
-export default Header;
+const mapStateToProps = (rootReducer) => {
+    return (
+        //map the rootReducer to the props, we actually return the
+        //props object which will be passed to the component.
+        {theUser: rootReducer.user.currentUser}
+    )
+};
+
+//the connect function return a HOC that will wrap the header component.
+const connector = connect(mapStateToProps);
+
+export default connector(Header);

@@ -6,16 +6,15 @@ import Header from "./components/header/header.component";
 import SignInAndUp from "./pages/sign-in-up/sign-in-up.component";
 import "./App.css";
 import { auth, createUserIfNotExists } from './firebase/firebase.utils';
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/user.actions';
 
 class App extends React.Component
 {
    
     constructor() {
         super();
-        this.state = {
-            currentUser: null
-        }
-        
+
         //method which we get from the auth.onAuthStateChanged() function
         //So we can unsbscribe when component destroyed..
         this.unsbscribeMethod = null;
@@ -29,15 +28,15 @@ class App extends React.Component
                 //create user profile if not exists and get user doc ref.
                 const userRef = await createUserIfNotExists(user);
                 userRef.onSnapshot((snapshot) => {
-                    this.setState({ currentUser: {
+                    this.props.setUserAction({
                         id: snapshot.id,
                         ...snapshot.data()
-                    }});
+                    });
                 })
             }
             else {
                 //if sign-out..
-                this.setState({ currentUser: null});
+                this.props.setUserAction(null);
             }
         });
     }
@@ -49,7 +48,7 @@ class App extends React.Component
     render() {
         return (
             <div>
-                <Header currentUser={this.state.currentUser}/>
+                <Header/>
                 <Switch>
                     <Route exact path="/" component={Homepage}/>
                     <Route path="/shop" component={ShopPage}/>
@@ -60,4 +59,15 @@ class App extends React.Component
     }
 }
 
-export default App;
+//map between our action name(that we choose) to the real action function.
+//instead of setState we will call this action name and pass the user data
+//that we want to update the component with.
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        setUserAction: (user) => {return dispatch(setCurrentUser(user))}
+    });
+}
+
+//HOC pattern, return a "Super App Object" that contains our actions
+//at the props property, so we will invoke them by: this.props.setUserAction
+export default connect(null, mapDispatchToProps)(App);
