@@ -4,7 +4,8 @@ import {ReactComponent as Logo} from '../../assets/crown.svg';
 import './header.styles.scss';
 import { auth } from '../../firebase/firebase.utils';
 import { connect } from 'react-redux';
-
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
 const showSignOption = (theUser) => {
     //if not null and not undefined..
@@ -39,16 +40,22 @@ const Header = (props) => (
             </Link>
 
             {showSignOption(props.theUser)}
+
+            <CartIcon/>
         </div>
+
+        {props.cartHidden ? null : <CartDropdown/>}
     </div>
 );
 
+//map the state which in the rootReducer to the props, we actually return the
+//props object which will be passed to the component, because
+//here we have access to the rootRecucer.
 const mapStateToProps = (rootReducer) => {
-    return (
-        //map the rootReducer to the props, we actually return the
-        //props object which will be passed to the component.
-        {theUser: rootReducer.user.currentUser}
-    )
+    return {        
+        theUser: rootReducer.user.currentUser,
+        cartHidden: rootReducer.cart.hidden
+    };
 };
 
 //the connect function return a HOC that will wrap the header component.
