@@ -12,24 +12,17 @@ class ShopPage extends React.Component
     }
 
     render() {
-        //copy the state collections object
+        //distruct the state.collections
         const {collections} = this.state;
         
         return <div className="shop-page">
                     {
-                         collections.map(({id, ...otherProps}) => 
-                             <CollectionPreview key={id} {...otherProps}/>)
-                        
-                        /* Same as:
-                        collections.map((item) => {
-                            return (
-                                <CollectionPreview 
-                                    key={item.id} 
-                                    title={item.title} 
-                                    items={item.items}/>
-                            )
-                        })
-                        */
+                        collections.map((item) => (
+                            <CollectionPreview 
+                                key={item.id} 
+                                title={item.title} 
+                                items={item.items}/>
+                        ))
                     }
                </div>
     }
