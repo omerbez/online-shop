@@ -3,11 +3,14 @@ import { Switch, Route, Redirect} from "react-router-dom";
 import Homepage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
+import CheckoutPage from './pages/checkout/checkout.component';
 import SignInAndUp from "./pages/sign-in-up/sign-in-up.component";
 import "./App.css";
 import { auth, createUserIfNotExists } from './firebase/firebase.utils';
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selectors';
+
 
 class App extends React.Component
 {
@@ -23,7 +26,7 @@ class App extends React.Component
     componentDidMount() {
         //will be called when sign-in & sign-out
         this.unsbscribeMethod = auth.onAuthStateChanged(async (user) => {
-            
+    
             if(user) {
                 //create user profile if not exists and get user doc ref.
                 const userRef = await createUserIfNotExists(user);
@@ -61,6 +64,7 @@ class App extends React.Component
                 <Switch>
                     <Route exact path="/" component={Homepage}/>
                     <Route path="/shop" component={ShopPage}/>
+                    <Route exact path="/checkout" component={CheckoutPage}/>
                     <Route exact path="/signin" render={this.handleSigninRoute}/>
                 </Switch>
             </div>
@@ -79,7 +83,7 @@ const mapDispatchToProps = (dispatch) => {
 
 //bring the user state into the component as a prop to check if user is sign-in already
 const mapStateToProps = (rootReducer) => {
-    return {user: rootReducer.user.currentUser};
+    return {user: selectCurrentUser(rootReducer)};
 }
 
 //HOC pattern, return a "Super App Object" that contains our actions

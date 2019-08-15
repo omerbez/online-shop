@@ -6,6 +6,8 @@ import { auth } from '../../firebase/firebase.utils';
 import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import { selectCartHidden } from '../../redux/cart/cart.selectors'
+import { selectCurrentUser } from '../../redux/user/user.selectors'
 
 const showSignOption = (theUser) => {
     //if not null and not undefined..
@@ -53,8 +55,8 @@ const Header = (props) => (
 //here we have access to the rootRecucer.
 const mapStateToProps = (rootReducer) => {
     return {        
-        theUser: rootReducer.user.currentUser,
-        cartHidden: rootReducer.cart.hidden
+        theUser: selectCurrentUser(rootReducer),
+        cartHidden: selectCartHidden(rootReducer)
     };
 };
 
