@@ -59,3 +59,41 @@ export const createUserIfNotExists = async(userAuth, otherData) => {
     }
     return userDocRef;
 }
+
+
+//This code actually should be in the backend..
+//Only the backend will have a permission to write to the database
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey);
+
+    //to write all the data in atomic call
+    const batch = firestore.batch();
+    objectsToAdd.forEach((doc) => {
+        const newDocRef = collectionRef.doc();
+        batch.set(newDocRef, doc);
+    });
+
+    return await batch.commit();
+}
+
+
+export const parseShopCollectionSnapshot = (collection) => {
+    const transformedDocsData = collection.docs.map((doc) => {
+        //split out the title and items from the document
+        const { title, items } = doc.data(); 
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title: title,
+            items: items
+        }
+    });
+    
+    //transform the array into object, the keys are the titles, the values are the
+    //array indexes
+    const toObject = {};
+    for(let i=0; i<transformedDocsData.length; i++) 
+        toObject[transformedDocsData[i].title.toLowerCase()] = transformedDocsData[i];
+    
+    return toObject;
+}

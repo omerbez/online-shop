@@ -14,13 +14,13 @@ export const selectCollection = (collectionUrlParam) => {
     return createSelector(
                 [selectShopCollections],
                 //DATA NORMALIZATION - find with O(1) time
-                (allColections) => allColections[collectionUrlParam] 
+                (allColections) => allColections ? allColections[collectionUrlParam] : null 
             );
 }
 
 //parse the collections from object to array
 export const selectCollectionsForPreview = createSelector(
     [selectShopCollections],
-    (collections) => Object.values(collections)
+    (collections) => (collections ? Object.values(collections) : [])
 );
 

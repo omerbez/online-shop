@@ -83,7 +83,9 @@ const mapDispatchToProps = (dispatch) => {
 
 //bring the user state into the component as a prop to check if user is sign-in already
 const mapStateToProps = (rootReducer) => {
-    return {user: selectCurrentUser(rootReducer)};
+    return {
+        user: selectCurrentUser(rootReducer)
+    };
 }
 
 //HOC pattern, return a "Super App Object" that contains our actions

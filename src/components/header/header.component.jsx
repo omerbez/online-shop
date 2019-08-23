@@ -1,7 +1,6 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+
 import {ReactComponent as Logo} from '../../assets/crown.svg';
-import './header.styles.scss';
 import { auth } from '../../firebase/firebase.utils';
 import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
@@ -9,46 +8,52 @@ import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 import { selectCartHidden } from '../../redux/cart/cart.selectors'
 import { selectCurrentUser } from '../../redux/user/user.selectors'
 
-const showSignOption = (theUser) => {
-    //if not null and not undefined..
-    if(theUser) {
-        return(
-            <div className="option" onClick={()=>auth.signOut()}>
-                SIGN OUT
-            </div>
-        )
-    }
-    //if not connected
-    return(
-        <Link className="option" to="/signin">
-                SIGN IN
-        </Link>
-    );
-}
+import {HeaderDivContainer, LogoLinkContainer, 
+    OptionsDivContainer, OptionLink, OptionDiv} from './header.styles';
+
+
 
 const Header = (props) => (
-    <div className="header">
-        <Link className="logo-container" to="/">
+    <HeaderDivContainer>
+        <LogoLinkContainer to="/">
             <Logo className="logo"/>
-        </Link>
+        </LogoLinkContainer>
 
-        <div className="options">
-            <Link className="option" to="/shop">
+        <OptionsDivContainer>
+            <OptionLink to="/shop">
                 SHOP
-            </Link>
+            </OptionLink>
 
-            <Link className="option" to="/shop">
+            <OptionLink to="/shop">
                 CONTACT
-            </Link>
+            </OptionLink>
 
             {showSignOption(props.theUser)}
 
             <CartIcon/>
-        </div>
+        </OptionsDivContainer>
 
         {props.cartHidden ? null : <CartDropdown/>}
-    </div>
+    </HeaderDivContainer>
 );
+
+const showSignOption = (theUser) => {
+    //if not null and not undefined..
+    if(theUser) {
+        return(
+            <OptionDiv onClick={()=>auth.signOut()}>
+                SIGN OUT
+            </OptionDiv>
+        )
+    }
+    //if not connected
+    return(
+        <OptionLink to="/signin">
+                SIGN IN
+        </OptionLink>
+    );
+}
+
 
 //map the state which in the rootReducer to the props, we actually return the
 //props object which will be passed to the component, because
