@@ -4,8 +4,8 @@ import { SpinnerContainer, SpinnerOverlay } from './with-spinner.styles';
 
 const WithSpinner = (WrappedComponent) => {
     //return the Spinner component or the wrappedComponent
-    const spinner = ({loading, ...otherProps}) => {
-        if(loading) {
+    const spinner = ({isFetching, ...otherProps}) => {
+        if(isFetching) {
             return(
                 <SpinnerOverlay>
                     <SpinnerContainer/>

@@ -24,3 +24,7 @@ export const selectCollectionsForPreview = createSelector(
     (collections) => (collections ? Object.values(collections) : [])
 );
 
+export const selectIsFetching = createSelector(
+    [selectShop],
+    (shop) => shop.collections ? false : true
+)
