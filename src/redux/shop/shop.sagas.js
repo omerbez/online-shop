@@ -1,4 +1,4 @@
-import { takeEvery, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import { firestore,  parseShopCollectionSnapshot} from '../../firebase/firebase.utils';
 import { notifyFetchSuccess, notifyFetchFailure } from './shop.actions';
 
@@ -27,5 +27,6 @@ export function* fetchCollectionsData() {
 
 
 export function* listenerToCollectionsFetch() {
-    yield takeEvery(ShopActionTypes.ON_FETCH_COLLECTIONS_START,  fetchCollectionsData);
+    //listen to the action and perform the generator function..
+    yield takeLatest(ShopActionTypes.ON_FETCH_COLLECTIONS_START,  fetchCollectionsData);
 }

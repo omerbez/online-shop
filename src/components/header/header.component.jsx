@@ -1,7 +1,5 @@
 import React from 'react';
-
 import {ReactComponent as Logo} from '../../assets/crown.svg';
-import { auth } from '../../firebase/firebase.utils';
 import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
@@ -11,6 +9,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors'
 import {HeaderDivContainer, LogoLinkContainer, 
     OptionsDivContainer, OptionLink, OptionDiv} from './header.styles';
 
+import { signOutStart } from '../../redux/user/user.actions'
 
 
 const Header = (props) => (
@@ -28,7 +27,7 @@ const Header = (props) => (
                 CONTACT
             </OptionLink>
 
-            {showSignOption(props.theUser)}
+            {showSignOption(props)}
 
             <CartIcon/>
         </OptionsDivContainer>
@@ -37,11 +36,11 @@ const Header = (props) => (
     </HeaderDivContainer>
 );
 
-const showSignOption = (theUser) => {
+const showSignOption = (props) => {
     //if not null and not undefined..
-    if(theUser) {
+    if(props.theUser) {
         return(
-            <OptionDiv onClick={()=>auth.signOut()}>
+            <OptionDiv onClick={props.startSignOut}>
                 SIGN OUT
             </OptionDiv>
         )
@@ -65,7 +64,13 @@ const mapStateToProps = (rootReducer) => {
     };
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        startSignOut: () => dispatch(signOutStart())
+    }
+}
+
 //the connect function return a HOC that will wrap the header component.
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 export default connector(Header);

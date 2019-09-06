@@ -18,6 +18,7 @@ class SignUp extends React.Component
         }
     }
 
+    /* Should be handled in own SAGA.. better for reuse concept */
     handleSubmit = async (event) => {
         //async function because we connect to firebase..
         event.preventDefault();

@@ -5,48 +5,17 @@ import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
 import CheckoutPage from './pages/checkout/checkout.component';
 import SignInAndUp from "./pages/sign-in-up/sign-in-up.component";
-import "./App.css";
-import { auth, createUserIfNotExists } from './firebase/firebase.utils';
 import { connect } from 'react-redux';
-import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
+import { checkUserSession } from './redux/user/user.actions';
+import { GlobalStyles } from './global.styles';
 
 
 class App extends React.Component
 {
    
-    constructor() {
-        super();
-
-        //method which we get from the auth.onAuthStateChanged() function
-        //So we can unsbscribe when component destroyed..
-        this.unsbscribeMethod = null;
-    }
-
     componentDidMount() {
-        //will be called when sign-in & sign-out
-        this.unsbscribeMethod = auth.onAuthStateChanged(async (user) => {
-    
-            if(user) {
-                //create user profile if not exists and get user doc ref.
-                const userRef = await createUserIfNotExists(user);
-                userRef.onSnapshot((snapshot) => {
-                    //set state with redux..
-                    this.props.setUserAction({
-                        id: snapshot.id,
-                        ...snapshot.data()
-                    });
-                })
-            }
-            else {
-                //if sign-out..
-                this.props.setUserAction(null);
-            }
-        });
-    }
-
-    componentWillUnmount() {
-        this.unsbscribeMethod();
+        this.props.checkLoginSession();
     }
 
     handleSigninRoute = () => {
@@ -60,6 +29,7 @@ class App extends React.Component
     render() {
         return (
             <div>
+                <GlobalStyles/>
                 <Header/>
                 <Switch>
                     <Route exact path="/" component={Homepage}/>
@@ -72,13 +42,10 @@ class App extends React.Component
     }
 }
 
-//map between our action name(that we choose) to the real action function.
-//instead of setState we will call this action name (it will be in the props) 
-//and pass the user data that we want to update the component with.
 const mapDispatchToProps = (dispatch) => {
-    return ({
-        setUserAction: (user) => {return dispatch(setCurrentUser(user))}
-    });
+    return {
+        checkLoginSession: () => dispatch(checkUserSession())
+    }
 }
 
 //bring the user state into the component as a prop to check if user is sign-in already

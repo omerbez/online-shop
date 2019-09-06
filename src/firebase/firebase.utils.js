@@ -19,11 +19,11 @@ export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 //config Google sign-in provider option (could be facebook for example..)
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({prompt: "select_account"});
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({prompt: "select_account"});
 
 //this is the method that show the Google sign-in popup.
-export const SignInWithGoogle = () => auth.signInWithPopup(provider); 
+export const SignInWithGoogle = () => auth.signInWithPopup(googleProvider); 
 
 export default firebase;
 
@@ -96,4 +96,14 @@ export const parseShopCollectionSnapshot = (collection) => {
         toObject[transformedDocsData[i].title.toLowerCase()] = transformedDocsData[i];
     
     return toObject;
+}
+
+
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            unsubscribe(); //imiddiatly cancel the listener.. we want listen just once
+            resolve(user);
+        }, reject)
+    });
 }
