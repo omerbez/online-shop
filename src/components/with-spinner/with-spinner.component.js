@@ -1,18 +1,10 @@
 import React from 'react';
-import { SpinnerContainer, SpinnerOverlay } from './with-spinner.styles';
-
+import Spinner from '../spinner/spinner.component';
 
 const WithSpinner = (WrappedComponent) => {
     //return the Spinner component or the wrappedComponent
     const spinner = ({isFetching, ...otherProps}) => {
-        if(isFetching) {
-            return(
-                <SpinnerOverlay>
-                    <SpinnerContainer/>
-                </SpinnerOverlay>
-            );
-        }
-        return <WrappedComponent {...otherProps}/>;
+        return isFetching ? <Spinner/> : <WrappedComponent {...otherProps}/>;
     }
 
     return spinner;
