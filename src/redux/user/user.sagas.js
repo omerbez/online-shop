@@ -5,7 +5,6 @@ import UserActionTypes from './user.types';
 import { googleProvider, auth, createUserIfNotExists, getCurrentUser } from '../../firebase/firebase.utils';
 
 import { signInSuccess, signInFaild, signOutSuccess, signOutFaild } from './user.actions';
-import { clearCart } from '../cart/cart.actions';
 
 
 function* onGoogleSignInStart() {
@@ -69,7 +68,6 @@ function* signOut() {
     try {
         yield auth.signOut();
         yield put(signOutSuccess());
-        yield put(clearCart());
     } catch(exception) {
         yield put(signOutFaild());
     }

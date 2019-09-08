@@ -1,7 +1,13 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import CustomButton from '../custom-button/custom-button.component';
 
+import { fadeIn } from 'react-animations'
+
+const fadeInAnimation = keyframes`${fadeIn}`;
+
+
 export const CollectionItemContainer = styled.div`
+  animation: 1s ${fadeInAnimation};
   width: 22vw;
   display: flex;
   flex-direction: column;
